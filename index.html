@@ -1,0 +1,110 @@
+<html>
+<head>
+<style>
+    .vl {
+        border-left: 3px solid;
+        height: 100%;
+        position: absolute;
+        left: 50%;
+        margin-left: -3px;
+        top: 0;
+    }
+    #applicant{
+        position: absolute;
+        top: -1%;
+        left: 52%;
+    }
+    #applicantView{
+        position: absolute;
+        top: 8%;
+        left: 52%;
+    }
+</style>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div class="vl"></div>
+
+    <h1 id="employer">Employer View:</h1>
+    <h1 id="applicant">Applicant View:</h1>
+
+    <p>Required Education:</p>
+    <select id="requiredEducation">
+        <option value="1">Associates or higher</option>
+        <option value="2">Bachelors or higher</option>
+        <option value="3">Masters or higher</option>
+        <option value="4">PhD</option>
+    </select>
+    <br/><br/>
+    <p>Required Years of Experience:</p> <input id="setExpierence" type="number" value=""/>
+    <br/><br/>
+    <p>Any Relevant Keywords:</p>
+    <input id="keyword1" type="text" value="keyword"/><br/><br/>
+    <input id="keyword2" type="text" value="keyword"/><br/><br/>
+    <input id="keyword3" type="text" value="keyword"/><br/><br/>
+    <input id="keyword4" type="text" value="keyword"/><br/><br/>
+    <input id="keyword5" type="text" value="keyword"/><br/><br/>
+    <input id="keyword6" type="text" value="keyword"/>
+    <br/><br/>
+    <div id="applicantView">
+        <p>Education Level</p>
+        <select id="applicantEducation">
+            <option value="0">High School</option>
+            <option value="1">Associates</option>
+            <option value="2">Bachelors</option>
+            <option value="3">Masters</option>
+            <option value="4">PhD</option>
+        </select>
+    <p>Years of Experience (In a Field Relavent to the Position):</p> <input id="experience" type="number" value=""/>
+    <p>Please Attach a Resume.</p>
+    <input type="file" id="fileinput" multiple />
+    </div>
+    <br/><br/>
+    <div id="best">
+        <h2>Best Matches:</h2>
+    </div>
+    </div>
+    <script type="text/javascript">
+        function readMultipleFiles(evt) {
+            let setExpierence = document.getElementById('setExpierence').value;
+            let expierence = document.getElementById('experience').value;
+            let files = evt.target.files;
+            let selectedApplicantEducation = document.getElementById("applicantEducation"); 
+            let selectedApplicantEducationOption = selectedApplicantEducation.options[selectedApplicantEducation.selectedIndex].value;
+            let selectedRequiredEducation = document.getElementById("requiredEducation"); 
+            let selectedRequiredEducationOption = selectedRequiredEducation.options[selectedRequiredEducation.selectedIndex].value;
+            let keywordArray = [
+                document.getElementById('keyword1').value,
+                document.getElementById('keyword2').value,
+                document.getElementById('keyword3').value,
+                document.getElementById('keyword4').value,
+                document.getElementById('keyword5').value,
+                document.getElementById('keyword6').value
+                ];
+
+            if (files) {
+                for (var i=0, f; f=files[i]; i++) {
+                      var r = new FileReader();
+                    r.onload = (function(f) {
+                        return function(e) {
+                            var contents = e.target.result.toLowerCase();
+                            if(keywordArray.some(substring=>contents.includes(substring))
+                            && expierence >= setExpierence
+                            && selectedApplicantEducationOption >= selectedRequiredEducationOption
+                            ){
+                            document.getElementById('best').innerHTML += (f.name) + '<br/>'; 
+                            }
+                            console.log(selectedRequiredEducationOption)
+                        };
+                    })(f);
+                    r.readAsText(f);
+                }   
+            } else {
+                  alert("Failed to load files"); 
+            }
+          }
+          
+          document.getElementById('fileinput').addEventListener('change', readMultipleFiles, false);
+    </script>
+</body>
+</html>
